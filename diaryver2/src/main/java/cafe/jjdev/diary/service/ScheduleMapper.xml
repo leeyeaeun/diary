@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cafe.jjdev.diary.service.ScheduleMapper">
+<!-- 	반복title select -->
+	<select id="selectRepeatScheduleTitleListByDate" resultType="cafe.jjdev.diary.service.Schedule" parameterType="String">
+		select
+			
+			schedule_title as 'scheduleTitle',
+			schedule_font_color as 'scheduleFontColor',
+			'repeat' as 'repeat'
+		from
+			repeat_schedule
+		where schedule_date= #{scheduleDate}
+		order by schedule_no
+	</select>
+	<!-- 추후 union으로 합치기 -->
+<!-- 	반복없는 title 스케쥴 -->
+	<select id="selectScheduleTitleListByDate" resultType="cafe.jjdev.diary.service.Schedule" parameterType="String">
+		select
+		
+			schedule_title as scheduleTitle,
+			schedule_font_color as scheduleFontColor
+		from
+			schedule
+		where schedule_date= #{scheduleDate}
+		order by schedule_no
+	</select>
+	<!-- 반복 스케쥴 리스트 -->
+	<select id="selectRepeatscheduleListByDate" resultType="cafe.jjdev.diary.service.Schedule" parameterType="String">
+		select
+			schedule_no as scheduleNo, 
+			schedule_title as scheduleTitle,
+			schedule_memo as scheduleMemo,
+			schedule_place as schedulePlace,
+			'repeat' as 'repeat'
+		from
+			repeat_schedule
+		where schedule_date= #{scheduleDate}
+		order by schedule_no
+	</select>
+	
+<!-- 	반복아닌 스케쥴 리스트 -->
+	<select id="selectscheduleListByDate" resultType="cafe.jjdev.diary.service.Schedule" parameterType="String">
+		select
+			schedule_no as scheduleNo, 
+			schedule_title as scheduleTitle,
+			schedule_memo as scheduleMemo,
+			schedule_place as schedulePlace
+		from
+			schedule
+		where schedule_date= #{scheduleDate}
+		order by schedule_no
+	</select>
+	
+	<insert id="insertRepeatSchedule" parameterType="cafe.jjdev.diary.service.Schedule">
+		INSERT INTO repeat_schedule(
+			schedule_date,
+			schedule_title,
+			schedule_memo,
+			schedule_place,
+			schedule_font_color
+		)VALUES(
+			#{scheduleDate},
+			#{scheduleTitle},
+			#{scheduleMemo},
+			#{schedulePlace},
+			#{scheduleFontColor}
+		)
+	</insert>
+	
+	<insert id="insertSchedule" parameterType="cafe.jjdev.diary.service.Schedule">
+		INSERT INTO schedule(
+			schedule_date,
+			schedule_title,
+			schedule_memo,
+			schedule_place,
+			schedule_font_color
+		)VALUES(
+			#{scheduleDate},
+			#{scheduleTitle},
+			#{scheduleMemo},
+			#{schedulePlace},
+			#{scheduleFontColor}
+		)
+	</insert>
+</mapper>
