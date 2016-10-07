@@ -20,6 +20,24 @@ public class DiaryController {
 	@Autowired
 	DiaryService diaryservice;
 	
+	//수정화면 
+	@RequestMapping(value="/diary/scheduleModifyForm")
+	public String scheduleModifyForm(Schedule schedule,Model model){
+		String srcScheduleDate =schedule.getSrcScheduleDate();
+		logger.info("scheduleModify schedule : {}",schedule.toString());
+		model.addAttribute("scheduleModify",diaryservice.scheduleModifyForm(schedule));
+		model.addAttribute("srcScheduleDate",srcScheduleDate);
+		diaryservice.scheduleRemove(schedule);
+		return "/diary/scheduleModifyForm";//원본날짜  ?scheduleDday="+schedule.getSrcScheduleDate()
+	}
+	//삭제
+	@RequestMapping(value="/diary/scheduleRemove",method=RequestMethod.GET)
+	public String scheduleRemove(Schedule schedule){
+		logger.info("schedule :{}",schedule.toString() );
+		diaryservice.scheduleRemove(schedule);
+		return "redirect:/diary/scheduleList?scheduleDday="+schedule.getSrcScheduleDate();
+	}
+	//입력
 	@RequestMapping(value="/diary/ScheduleAdd",method =RequestMethod.POST)
 	public String addSchedule(Schedule schedule){
 		logger.info("param {}",schedule);//repeat값 on/ null
@@ -28,7 +46,7 @@ public class DiaryController {
 	}
 	
 	
-	//오늘 날짜 구하기    * {} : 배열요청. 
+	//index 매핑             * {} : 배열요청. 
 	@RequestMapping(value={"/","/diary/","/diary/index"})
 	public String diaryIndex(Model model,
 							@RequestParam(value="ddayYear", defaultValue="0") int ddayYear,
@@ -38,9 +56,10 @@ public class DiaryController {
 		model.addAttribute("oneDayList",map.get("oneDayList"));
 		model.addAttribute("ddayYear",map.get("ddayYear"));
 		model.addAttribute("ddayMonth",map.get("ddayMonth"));
+		model.addAttribute("today",map.get("today"));
 		return "/diary/index";
 	}
-
+	//조회
 	@RequestMapping(value="/diary/scheduleList")
 	public String scheduleList(Model model , @RequestParam(value="scheduleDday")String scheduleDday){
 		logger.info("PARAM DDAY :{}",scheduleDday);

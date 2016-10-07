@@ -3,6 +3,45 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cafe.jjdev.diary.service.ScheduleMapper">
+	
+	<select id="selectForRepeatScheduleUpdate" resultType="cafe.jjdev.diary.service.Schedule" parameterType="int">
+		select
+			schedule_date as scheduleDate,
+			schedule_title as scheduleTitle,
+			schedule_memo as scheduleMemo,
+			schedule_place as schedulePlace,
+			schedule_font_color as scheduleFontColor,
+			schedule_time as scheduleTime,
+			'repeat' as 'repeat'
+		from
+			repeat_schedule
+		where schedule_no= #{scheduleNo}
+	</select>
+	
+	<select id="selectForScheduleUpdate" resultType="cafe.jjdev.diary.service.Schedule" parameterType="int">
+		select
+			schedule_date as scheduleDate,
+			schedule_title as scheduleTitle,
+			schedule_memo as scheduleMemo,
+			schedule_place as schedulePlace,
+			schedule_font_color as scheduleFontColor,
+			schedule_time as scheduleTime
+			
+		from
+			schedule
+		where schedule_no= #{scheduleNo}
+	</select>
+	
+	<delete id="deleteSchedule" parameterType="int"> 
+		DELETE FROM schedule
+		WHERE schedule_no=#{scheduleNo}
+	</delete>
+	
+	<delete id="deleteRepeatSchedule" parameterType="int">
+		DELETE FROM repeat_schedule
+		WHERE schedule_no=#{scheduleNo}
+	</delete>
+
 <!-- 	반복title select -->
 	<select id="selectRepeatScheduleTitleListByDate" resultType="cafe.jjdev.diary.service.Schedule" parameterType="String">
 		select
@@ -34,6 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			schedule_title as scheduleTitle,
 			schedule_memo as scheduleMemo,
 			schedule_place as schedulePlace,
+			schedule_time as scheduleTime,
 			'repeat' as 'repeat'
 		from
 			repeat_schedule
@@ -47,7 +87,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			schedule_no as scheduleNo, 
 			schedule_title as scheduleTitle,
 			schedule_memo as scheduleMemo,
-			schedule_place as schedulePlace
+			schedule_place as schedulePlace,
+			schedule_time as scheduleTime
 		from
 			schedule
 		where schedule_date= #{scheduleDate}
@@ -60,13 +101,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			schedule_title,
 			schedule_memo,
 			schedule_place,
-			schedule_font_color
+			schedule_font_color,
+			schedule_time
 		)VALUES(
 			#{scheduleDate},
 			#{scheduleTitle},
 			#{scheduleMemo},
 			#{schedulePlace},
-			#{scheduleFontColor}
+			#{scheduleFontColor},
+			#{scheduleTime}
 		)
 	</insert>
 	
@@ -76,13 +119,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			schedule_title,
 			schedule_memo,
 			schedule_place,
-			schedule_font_color
+			schedule_font_color,
+			schedule_time
 		)VALUES(
 			#{scheduleDate},
 			#{scheduleTitle},
 			#{scheduleMemo},
 			#{schedulePlace},
-			#{scheduleFontColor}
+			#{scheduleFontColor},
+			#{scheduleTime}
 		)
 	</insert>
 </mapper>

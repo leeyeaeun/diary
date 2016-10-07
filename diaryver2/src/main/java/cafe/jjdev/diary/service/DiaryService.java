@@ -1,5 +1,7 @@
 package cafe.jjdev.diary.service;
 
+import java.time.Month;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -16,6 +18,38 @@ public class DiaryService {
 	private static final Logger logger = LoggerFactory.getLogger(DiaryService.class);
 	@Autowired
 	private ScheduleDao scheduleDao;
+	//수정처리
+	public int scheduleModify(Schedule schedule){
+		//반복X ->반복 O로 변경시 schedule테이블의 정보를 지우고 
+		if(schedule.getRepeat()==""||schedule.getRepeat()==null){//반복x
+			return scheduleDao.insertSchedule(schedule);
+		}else if(schedule.getRepeat().equals("repeat")){//반복O
+			return scheduleDao.insertRepeatSchedule(schedule);
+		}
+
+		return -1;
+	}
+
+	//수정화면
+	public Schedule scheduleModifyForm(Schedule schedule){
+		logger.info("schedule {} ",schedule.toString());
+		if(schedule.getRepeat()==""||schedule.getRepeat()==null){
+			return scheduleDao.selectForScheduleUpdate(schedule.getScheduleNo());
+		}else{
+			return scheduleDao.selectForRepeatScheduleUpdate(schedule.getScheduleNo());
+		}
+	
+	}
+	//삭제
+	public int scheduleRemove(Schedule schedule){
+		logger.info("schedule.getRepeat() : {}",schedule.getRepeat());
+		if(schedule.getRepeat()==""||schedule.getRepeat()==null){//
+			return scheduleDao.deleteSchedule(schedule.getScheduleNo());
+		}else if(schedule.getRepeat().equals("repeat")){
+			return scheduleDao.deleteRepeatSchedule(schedule.getScheduleNo());
+		}
+			return -1;//문제발생시 -1리턴
+	}
 	
 	//스케쥴리스트
 	public List<Schedule> getScheduleListByDate(String scheduleDate){
@@ -31,14 +65,16 @@ public class DiaryService {
 	
 	public int addSchedule(Schedule schedule){
 		//repeat에 체크여부 ...
-		if(schedule.getRepeat()==null){
+		logger.info("schedule.getRepeat() !! : {}",schedule.getRepeat());
+		if(schedule.getRepeat()==""||schedule.getRepeat()==null){
 			return scheduleDao.insertSchedule(schedule);
-		}else{
+		}else if(schedule.getRepeat().equals("repeat")){
 			return scheduleDao.insertRepeatSchedule(schedule);
 		}	
+		return -1; //error
 	}
 	
-	
+	//index 페이지
 	public Map<String , Object> getOneDayList(int ddayYear,int ddayMonth,String ddayOption){
 		Map map = new HashMap<String , Object>();
 		//dday : ?년 + ?월 + 1일
@@ -96,12 +132,19 @@ public class DiaryService {
 			}else {
 				oneDay = new OneDay();
 				oneDay.setDay(endSpace);
+				endSpace++;
 			}
 			oneDayList.add(oneDay);
 		}
+		OneDay today = new OneDay();
+		Calendar getToDay= Calendar.getInstance();	
+		today.setDay(getToDay.get(Calendar.DATE));
+		today.setMonth(getToDay.get(Calendar.MONTH)+1);
+		today.setYear(getToDay.get(Calendar.YEAR));
 		map.put("oneDayList", oneDayList);
 		map.put("ddayYear", dday.get(Calendar.YEAR));
 		map.put("ddayMonth", dday.get(Calendar.MONTH));
+		map.put("today", today);
 		
 		return map;		
 	}

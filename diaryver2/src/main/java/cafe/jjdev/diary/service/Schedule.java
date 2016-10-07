@@ -9,6 +9,7 @@ public class Schedule {
 	private String scheduleFontColor;
 	private String repeat;
 	private String srcScheduleDate;
+	private String scheduleTime;
 	
 	public int getScheduleNo() {
 		return scheduleNo;
@@ -58,18 +59,19 @@ public class Schedule {
 	public void setSrcScheduleDate(String srcScheduleDate) {
 		this.srcScheduleDate = srcScheduleDate;
 	}
+	public String getScheduleTime() {
+		return scheduleTime;
+	}
+	public void setScheduleTime(String scheduleTime) {
+		this.scheduleTime = scheduleTime;
+	}
 	@Override
 	public String toString() {
 		return "Schedule [scheduleNo=" + scheduleNo + ", scheduleDate=" + scheduleDate + ", scheduleTitle="
 				+ scheduleTitle + ", scheduleMemo=" + scheduleMemo + ", schedulePlace=" + schedulePlace
 				+ ", scheduleFontColor=" + scheduleFontColor + ", repeat=" + repeat + ", srcScheduleDate="
-				+ srcScheduleDate + "]";
-	} 
-	
-	
-	
-	
-	
-	
+				+ srcScheduleDate + ", scheduleTime=" + scheduleTime + "]";
+	}
+
 	
 }

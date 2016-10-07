@@ -1,6 +1,7 @@
 package cafe.jjdev.diary.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
@@ -16,6 +17,22 @@ public class ScheduleDao {
 	private SqlSessionTemplate sqlSession;
 	private final String NS ="cafe.jjdev.diary.service.ScheduleMapper";
 	
+	//수정화면 
+	public Schedule selectForRepeatScheduleUpdate (int scheduleNo){
+		return sqlSession.selectOne(NS+".selectForRepeatScheduleUpdate", scheduleNo);
+	}
+	
+	public Schedule selectForScheduleUpdate (int scheduleNo){
+		return sqlSession.selectOne(NS+".selectForScheduleUpdate", scheduleNo);
+	}
+	//삭제
+	public int deleteSchedule (int scheduleNo){
+		return sqlSession.delete(NS+".deleteSchedule",scheduleNo);
+	}
+	
+	public int deleteRepeatSchedule (int scheduleNo){
+		return sqlSession.delete(NS+".deleteRepeatSchedule",scheduleNo);
+	}
 	
 	//매년 반복 스케쥴title의 select
 	public List<Schedule> selectRepeatScheduleTitleListByDate(String scheduleDate){
